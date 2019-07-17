@@ -13,17 +13,16 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 //import java.awt.event.ActionListener;
 //import java.awt.event.MouseListener;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.*;
 //import Imagenes.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
+import java.sql.*;
+
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import javax.swing.JPasswordField;
+
+import org.postgresql.*;
 
 /**
  *
@@ -36,7 +35,15 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
     private JLabel logo,titulo,etiContra,etiUser;
     private Container paneComponentes;
     private FondoPanel pane;
-    
+
+    public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
+    public static final String USERNAME = "postgres";
+    public static final String PASSWORD = "123456789";
+
+    PreparedStatement ps;
+    ResultSet rs;
+
+
     public Login(){
         super("Inventario vinil de Recorte");
         //setLayout(new FlowLayout());
@@ -52,6 +59,31 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
         setVisible(true);
          
     }
+
+    /**
+     *Conexion con la base de datos
+     */
+    public static Connection getConection() {
+        Connection con = null;
+
+        try {
+
+            Class.forName("org.postgresql.Driver");
+            con = (Connection) DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            //JOptionPane.showMessageDialog(null, "Conexion exitosa");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return con;
+    }
+
+    private void limpiarCajas() {
+
+        user.setText(null);
+        contrasenna.setText(null);
+    }
+
     //Si quiero crear unos nuevos color puedo utlizar new Color(valor1,valor2,valor3)
     public void crear_componentes(){
         //paneComponentes=new Container();
@@ -76,6 +108,13 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
         aceptar=new JButton("Aceptar");
         aceptar.setSize(50,20);
         aceptar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aceptar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                    btnIngresarActionPerformed(evt);
+            }
+        });
+
+
         logo=new JLabel();
         String path="/Imagenes/logo.png";
         URL url=this.getClass().getResource(path);
@@ -113,9 +152,42 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
         //pane.add(new Box.Filler(minSize, prefSize, maxSize));
         pane.add(Box.createRigidArea(new Dimension(5,20)));
         pane.add(aceptar);
-        
-        
+
     }
+
+    public void evtbtnsalir(ActionEvent evt) {
+        System.exit(0);
+    }
+
+    private void btnIngresarActionPerformed(ActionEvent evt){
+
+        Connection con = null;
+
+        try{
+            con = getConection();
+             ps = con.prepareStatement("SELECT * FROM empleado WHERE usuario = ? and contraseña = ? ");
+             // ps.setString(1, );
+             ps.setString(1, user.getText());
+             ps.setString(2, contrasenna.getText());
+
+             rs = ps.executeQuery();
+
+        if (rs.next()) {
+            user.setText(rs.getString("usuario"));
+            contrasenna.setText(rs.getString("contraseña"));
+            new Principal();
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(aceptar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+            } catch (Exception e) {
+                System.err.println(e);
+
+            }
+
+            }
+
+
     public static void main(String[]args){
         Login l=new Login();
         
