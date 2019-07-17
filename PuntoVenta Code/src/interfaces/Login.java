@@ -29,7 +29,7 @@ import javax.swing.JPasswordField;
  *
  * @author admin
  */
-public class Ventana_Principal extends JFrame /*implements ActionListener,MouseListener*/{
+public class Login extends JFrame /*implements ActionListener,MouseListener*/{
     private JTextField user;
     private JPasswordField contrasenna;
     private JButton aceptar;
@@ -37,7 +37,7 @@ public class Ventana_Principal extends JFrame /*implements ActionListener,MouseL
     private Container paneComponentes;
     private FondoPanel pane;
     
-    public Ventana_Principal(){
+    public Login(){
         super("Inventario vinil de Recorte");
         //setLayout(new FlowLayout());
         //setBackground(Color.DARK_GRAY);
@@ -117,7 +117,7 @@ public class Ventana_Principal extends JFrame /*implements ActionListener,MouseL
         
     }
     public static void main(String[]args){
-        Ventana_Principal l=new Ventana_Principal();
+        Login l=new Login();
         
     }
     
