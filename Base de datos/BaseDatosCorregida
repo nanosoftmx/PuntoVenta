@@ -1,0 +1,64 @@
+create database PuntoVentaIng; 
+create Schema ingenieria;
+
+create table empleado(
+	id_empleado int primary key,
+	usuario varchar (40),
+	contraseña varchar(40),
+	nombre varchar (200),
+	fecha_nacimiento date,
+	fecha_contratacion date,
+	turno varchar (20)
+);
+
+create table administrativo(
+	id_empleado int, foreign key(id_empleado)references empleado(id_empleado) match full on update cascade on delete restrict,
+	funcion varchar(90),
+	departamento varchar(90)
+);
+create table factura(
+	fecha date,
+	folio_f int primary key
+);
+create table venta(
+	folio_venta int primary key,
+	id_empleado int, foreign key(id_empleado)references empleado(id_empleado) match full on update cascade on delete restrict,
+	fecha date,
+	folio_f int, foreign key(folio_f)references factura(folio_f) match full on update cascade on delete restrict
+);
+
+create table devolucion(
+	id_dev int primary key,
+	fecha date,
+	id_empleado int, foreign key(id_empleado)references empleado(id_empleado) match full on update cascade on delete restrict
+);
+create table producto(
+	codigo_producto int primary key,
+	descripcion varchar(200),
+	marca varchar(100),
+	fabricante varchar(90),
+	precio int
+);
+create table detalle_venta(
+	folio_venta int, foreign key(folio_venta) references venta(folio_venta) match full on update cascade on delete restrict,
+	cantidad int,
+	descuento float,
+	codigo_producto int, foreign key(codigo_producto) references producto(codigo_producto)match full on update cascade on delete restrict
+);
+
+create table detalle_devolucion(
+	folio_venta int, foreign key (folio_venta) references venta(folio_venta) match full on update cascade on delete restrict,
+	id_dev int, foreign key (id_dev) references devolucion (id_dev) match full on update cascade on delete restrict,
+	codigo_producto int, foreign key (codigo_producto) references producto(codigo_producto) match full on update cascade on delete restrict,
+	cantidad int,
+	motivo varchar(100)
+);
+create table ticket(
+	id_empleado int, foreign key(id_empleado) references empleado(id_empleado) match full on update cascade on delete restrict,
+	fecha date,
+	folio_venta int, foreign key(folio_venta) references venta(folio_venta) match full on update cascade on delete restrict
+	
+);
+
+select * from empleado;
+
