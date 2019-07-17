@@ -13,6 +13,6 @@ import java.net.URL;
  */
 public class Principal {
  private JButton salir,vender,consultar;
- private JLabel logo,
+ private JLabel logo;
     
 }
