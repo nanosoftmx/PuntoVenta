@@ -159,6 +159,11 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
         System.exit(0);
     }
 
+    /**
+     *
+     * @param evt
+     * METODO DE EL BOTON ACEPTAR, PERMITE INGRESAR AL SISTEMA
+     */
     private void btnIngresarActionPerformed(ActionEvent evt){
 
         Connection con = null;
