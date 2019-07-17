@@ -1,0 +1,409 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.3
+-- Dumped by pg_dump version 11.3
+
+-- Started on 2019-07-17 16:11:12 CDT
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 6 (class 2615 OID 16394)
+-- Name: ingenieria; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA ingenieria;
+
+
+ALTER SCHEMA ingenieria OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 198 (class 1259 OID 16907)
+-- Name: administrativo; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.administrativo (
+    id_empleado integer,
+    funcion character varying(90),
+    departamento character varying(90)
+);
+
+
+ALTER TABLE ingenieria.administrativo OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 16979)
+-- Name: detalle_devolucion; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.detalle_devolucion (
+    folio_venta integer,
+    id_dev integer,
+    codigo_producto integer,
+    cantidad integer,
+    motivo character varying(100)
+);
+
+
+ALTER TABLE ingenieria.detalle_devolucion OWNER TO postgres;
+
+--
+-- TOC entry 203 (class 1259 OID 16966)
+-- Name: detalle_venta; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.detalle_venta (
+    folio_venta integer,
+    cantidad integer,
+    descuento double precision,
+    codigo_producto integer
+);
+
+
+ALTER TABLE ingenieria.detalle_venta OWNER TO postgres;
+
+--
+-- TOC entry 201 (class 1259 OID 16935)
+-- Name: devolucion; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.devolucion (
+    id_dev integer NOT NULL,
+    fecha date,
+    id_empleado integer
+);
+
+
+ALTER TABLE ingenieria.devolucion OWNER TO postgres;
+
+--
+-- TOC entry 197 (class 1259 OID 16902)
+-- Name: empleado; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.empleado (
+    id_empleado integer NOT NULL,
+    usuario character varying(40),
+    "contraseña" character varying(40),
+    nombre character varying(200),
+    fecha_nacimiento date,
+    fecha_contratacion date,
+    turno character varying(20)
+);
+
+
+ALTER TABLE ingenieria.empleado OWNER TO postgres;
+
+--
+-- TOC entry 199 (class 1259 OID 16915)
+-- Name: factura; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.factura (
+    fecha date,
+    folio_f integer NOT NULL
+);
+
+
+ALTER TABLE ingenieria.factura OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 16945)
+-- Name: producto; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.producto (
+    codigo_producto integer NOT NULL,
+    descripcion character varying(200),
+    marca character varying(100),
+    fabricante character varying(90),
+    precio integer
+);
+
+
+ALTER TABLE ingenieria.producto OWNER TO postgres;
+
+--
+-- TOC entry 205 (class 1259 OID 16997)
+-- Name: ticket; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.ticket (
+    id_empleado integer,
+    fecha date,
+    folio_venta integer
+);
+
+
+ALTER TABLE ingenieria.ticket OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 16920)
+-- Name: venta; Type: TABLE; Schema: ingenieria; Owner: postgres
+--
+
+CREATE TABLE ingenieria.venta (
+    folio_venta integer NOT NULL,
+    id_empleado integer,
+    fecha date,
+    folio_f integer
+);
+
+
+ALTER TABLE ingenieria.venta OWNER TO postgres;
+
+--
+-- TOC entry 3176 (class 0 OID 16907)
+-- Dependencies: 198
+-- Data for Name: administrativo; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.administrativo (id_empleado, funcion, departamento) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3182 (class 0 OID 16979)
+-- Dependencies: 204
+-- Data for Name: detalle_devolucion; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.detalle_devolucion (folio_venta, id_dev, codigo_producto, cantidad, motivo) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3181 (class 0 OID 16966)
+-- Dependencies: 203
+-- Data for Name: detalle_venta; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.detalle_venta (folio_venta, cantidad, descuento, codigo_producto) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3179 (class 0 OID 16935)
+-- Dependencies: 201
+-- Data for Name: devolucion; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.devolucion (id_dev, fecha, id_empleado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3175 (class 0 OID 16902)
+-- Dependencies: 197
+-- Data for Name: empleado; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.empleado (id_empleado, usuario, "contraseña", nombre, fecha_nacimiento, fecha_contratacion, turno) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3177 (class 0 OID 16915)
+-- Dependencies: 199
+-- Data for Name: factura; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.factura (fecha, folio_f) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3180 (class 0 OID 16945)
+-- Dependencies: 202
+-- Data for Name: producto; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.producto (codigo_producto, descripcion, marca, fabricante, precio) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3183 (class 0 OID 16997)
+-- Dependencies: 205
+-- Data for Name: ticket; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.ticket (id_empleado, fecha, folio_venta) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3178 (class 0 OID 16920)
+-- Dependencies: 200
+-- Data for Name: venta; Type: TABLE DATA; Schema: ingenieria; Owner: postgres
+--
+
+COPY ingenieria.venta (folio_venta, id_empleado, fecha, folio_f) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3040 (class 2606 OID 16939)
+-- Name: devolucion devolucion_pkey; Type: CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.devolucion
+    ADD CONSTRAINT devolucion_pkey PRIMARY KEY (id_dev);
+
+
+--
+-- TOC entry 3034 (class 2606 OID 16906)
+-- Name: empleado empleado_pkey; Type: CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.empleado
+    ADD CONSTRAINT empleado_pkey PRIMARY KEY (id_empleado);
+
+
+--
+-- TOC entry 3036 (class 2606 OID 16919)
+-- Name: factura factura_pkey; Type: CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.factura
+    ADD CONSTRAINT factura_pkey PRIMARY KEY (folio_f);
+
+
+--
+-- TOC entry 3042 (class 2606 OID 16949)
+-- Name: producto producto_pkey; Type: CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.producto
+    ADD CONSTRAINT producto_pkey PRIMARY KEY (codigo_producto);
+
+
+--
+-- TOC entry 3038 (class 2606 OID 16924)
+-- Name: venta venta_pkey; Type: CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.venta
+    ADD CONSTRAINT venta_pkey PRIMARY KEY (folio_venta);
+
+
+--
+-- TOC entry 3043 (class 2606 OID 16910)
+-- Name: administrativo administrativo_id_empleado_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.administrativo
+    ADD CONSTRAINT administrativo_id_empleado_fkey FOREIGN KEY (id_empleado) REFERENCES ingenieria.empleado(id_empleado) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3051 (class 2606 OID 16992)
+-- Name: detalle_devolucion detalle_devolucion_codigo_producto_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.detalle_devolucion
+    ADD CONSTRAINT detalle_devolucion_codigo_producto_fkey FOREIGN KEY (codigo_producto) REFERENCES ingenieria.producto(codigo_producto) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3049 (class 2606 OID 16982)
+-- Name: detalle_devolucion detalle_devolucion_folio_venta_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.detalle_devolucion
+    ADD CONSTRAINT detalle_devolucion_folio_venta_fkey FOREIGN KEY (folio_venta) REFERENCES ingenieria.venta(folio_venta) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3050 (class 2606 OID 16987)
+-- Name: detalle_devolucion detalle_devolucion_id_dev_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.detalle_devolucion
+    ADD CONSTRAINT detalle_devolucion_id_dev_fkey FOREIGN KEY (id_dev) REFERENCES ingenieria.devolucion(id_dev) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3048 (class 2606 OID 16974)
+-- Name: detalle_venta detalle_venta_codigo_producto_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.detalle_venta
+    ADD CONSTRAINT detalle_venta_codigo_producto_fkey FOREIGN KEY (codigo_producto) REFERENCES ingenieria.producto(codigo_producto) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3047 (class 2606 OID 16969)
+-- Name: detalle_venta detalle_venta_folio_venta_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.detalle_venta
+    ADD CONSTRAINT detalle_venta_folio_venta_fkey FOREIGN KEY (folio_venta) REFERENCES ingenieria.venta(folio_venta) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3046 (class 2606 OID 16940)
+-- Name: devolucion devolucion_id_empleado_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.devolucion
+    ADD CONSTRAINT devolucion_id_empleado_fkey FOREIGN KEY (id_empleado) REFERENCES ingenieria.empleado(id_empleado) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3053 (class 2606 OID 17005)
+-- Name: ticket ticket_folio_venta_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.ticket
+    ADD CONSTRAINT ticket_folio_venta_fkey FOREIGN KEY (folio_venta) REFERENCES ingenieria.venta(folio_venta) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3052 (class 2606 OID 17000)
+-- Name: ticket ticket_id_empleado_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.ticket
+    ADD CONSTRAINT ticket_id_empleado_fkey FOREIGN KEY (id_empleado) REFERENCES ingenieria.empleado(id_empleado) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3045 (class 2606 OID 16930)
+-- Name: venta venta_folio_f_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.venta
+    ADD CONSTRAINT venta_folio_f_fkey FOREIGN KEY (folio_f) REFERENCES ingenieria.factura(folio_f) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3044 (class 2606 OID 16925)
+-- Name: venta venta_id_empleado_fkey; Type: FK CONSTRAINT; Schema: ingenieria; Owner: postgres
+--
+
+ALTER TABLE ONLY ingenieria.venta
+    ADD CONSTRAINT venta_id_empleado_fkey FOREIGN KEY (id_empleado) REFERENCES ingenieria.empleado(id_empleado) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+-- Completed on 2019-07-17 16:11:13 CDT
+
+--
+-- PostgreSQL database dump complete
+--
+
