@@ -5,6 +5,8 @@
  */
 package interfaces;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,14 +14,18 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import static com.sun.deploy.uitoolkit.ToolkitStore.dispose;
 
 /**
  *
@@ -27,11 +33,18 @@ import javax.swing.JTextField;
  */
 public class PanelVentas extends JPanel{
     private JLabel etisubTotal,etIva,etiTotal,etiBusqueda,etiFolio,titulo,etiClave,etiNombre,etiMarca,etiAncho,etiCant,etiExist,busqueda,etiFecha,etiOrden,etiCliente,etiDatos,etiClaveMarca,etiNombreMarca,etiProv,etiRfc,etiDireccion,etiFax,etiConvenio,etiEnvio,etiTel,etiExt,etiEjecutivo,etiCorreo;
-    private JButton regresar,cancelar,cobrar;
+    private JButton regresar,cancelar,cobrar, buscar;
     private JTextField txtsubTotal,txtIVA,txtTotal,txtClave,txtFolio,txtNombre,txtMarca,txtAncho,txtCant,txtExist,txtFecha,txtOrden,txtCliente,txtDatos,txtClaveMarca,txtNombreMarca,txtProv,txtRfc,txtDireccion,txtFax,txtConvenio,txtEnvio,txtTel,txtExt,txtEjecutivo,txtCorreo;
     private JTable listRegistro,listaDatosBancarios;
     private GridBagConstraints c,c47,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25;
-            
+    DefaultTableModel modelo = new DefaultTableModel();
+    public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
+    public static final String USERNAME = "postgres";
+    public static final String PASSWORD = "123456789";
+
+    PreparedStatement ps;
+    ResultSet rs;
+
     public PanelVentas(){
         setLayout(new GridBagLayout());
         crear();
@@ -245,10 +258,17 @@ public class PanelVentas extends JPanel{
          
         
          
-         String[] columnNames = {"Código","Nombre producto","Descripción","Cantidad","Precio unitario","total"};
-         Object[][] data = {{"0012555","Teclado ASUS","teclado para gamers","2","$340.00","$680.00"}};
+         //String[] columnNames = {"Código","Nombre producto","Descripción","Cantidad","Precio unitario","total"};
+       //  Object[][] data = {};
 
-        listRegistro=new JTable(data,columnNames);
+
+        ;
+        listRegistro=new JTable(modelo);
+        modelo.addColumn("Codigo Producto");
+        modelo.addColumn("Descripcion");
+        modelo.addColumn("Marca");
+        modelo.addColumn("Fabricante");
+        modelo.addColumn("Precio");
         listRegistro.setFont(new Font("Century Gothic", 4, 12));
         listRegistro.setPreferredScrollableViewportSize(new Dimension(500, 100));
         listRegistro.setFillsViewportHeight(true);
@@ -258,7 +278,7 @@ public class PanelVentas extends JPanel{
          c16=new GridBagConstraints();
          c16.fill = GridBagConstraints.HORIZONTAL;  //natural height, maximum width
          c16.ipady = 0;       //make this component tall
-         //c12.weighty = 1.0; 
+         //c12.weighty = 1.0;
          //c20.weightx = 1.0; //request any extra vertical space
          c16.anchor = GridBagConstraints.CENTER; //bottom of space
          c16.insets = new Insets(4,20,4,20);  //top padding
@@ -267,7 +287,14 @@ public class PanelVentas extends JPanel{
          c16.gridy = 5;       //third row
          add(scrollPane,c16);
          
-         
+         buscar=new JButton("Buscar");
+         buscar.setFont(new Font("Century Gothic",4,12));
+         add(buscar);
+         buscar.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent evt) {
+                 enter(evt);
+             }
+         });
          
          regresar=new JButton("Menú Principal");
          regresar.setFont(new Font("Century Gothic", 4, 12));
@@ -388,9 +415,8 @@ public class PanelVentas extends JPanel{
          c24.gridwidth = 1;   //2 columns wide
          c24.gridy = 14;       //third row
          add(cobrar,c24);
-         
-         
-         
+
+
     }
     public void paintComponent(Graphics g){
         Dimension tamanno=getSize();
@@ -399,6 +425,57 @@ public class PanelVentas extends JPanel{
         setOpaque(false);
         super.paintComponents(g);
     }
+
+    public static Connection getConection() {
+        Connection con = null;
+
+        try {
+
+            Class.forName("org.postgresql.Driver");
+            con = (Connection) DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            //JOptionPane.showMessageDialog(null, "Conexion exitosa");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return con;
+    }
+
+
+    private void enter(ActionEvent e){
+            System.out.println("asd");
+            Connection con = null;
+
+            try {
+                con = getConection();
+                ps = con.prepareStatement("SELECT * FROM producto WHERE codigo_producto = ?");
+                // ps.setString(1, );
+                ps.setInt(1, Integer.parseInt(txtClave.getText()));
+
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    //Object[][] data = {{rs.getString("codigo_producto"),rs.getString("descripcion"),rs.getString("marca"),rs.getString("fabricante"),rs.getString("precio")}};
+                    Object[] fila = new Object[5];
+                    fila[0] = rs.getObject("codigo_producto");
+                    fila[1] = rs.getObject("descripcion");
+                    fila[2] = rs.getObject("marca");
+                    fila[3] = rs.getObject("fabricante");
+                    fila[4] = rs.getObject("precio");
+                    modelo.addRow(fila);
+
+                } else {
+                    JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception f) {
+                System.err.println(f);
+
+            }
+        }
+
+
+
+
     public void ejecutar(){
         JFrame n=new JFrame();
         n.setMinimumSize(new Dimension(750,500));
