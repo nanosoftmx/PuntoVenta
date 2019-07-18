@@ -45,7 +45,7 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
 
 
     public Login(){
-        super("Inventario vinil de Recorte");
+        super("Login");
         //setLayout(new FlowLayout());
         //setBackground(Color.DARK_GRAY);
         setSize(750,500);
