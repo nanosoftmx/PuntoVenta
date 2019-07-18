@@ -54,7 +54,7 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
         crear_componentes();
         annadir_componentes();
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //pack();
         setVisible(true);
          
@@ -180,7 +180,8 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
         if (rs.next()) {
             user.setText(rs.getString("usuario"));
             contrasenna.setText(rs.getString("contraseña"));
-            new Principal();
+            PanelVentas p = new PanelVentas();
+            p.ejecutar();
             dispose();
         } else {
             JOptionPane.showMessageDialog(aceptar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
