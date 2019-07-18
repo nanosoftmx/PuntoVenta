@@ -37,6 +37,9 @@ public class PanelVentas extends JPanel{
         crear();
         setVisible(true);
     }
+
+
+
     public void crear(){
          titulo=new JLabel("VENTAS");
          titulo.setFont(new Font("Century Gothic", 3, 20));
@@ -396,11 +399,12 @@ public class PanelVentas extends JPanel{
         setOpaque(false);
         super.paintComponents(g);
     }
-    public static void main(String[]args){
+    public void ejecutar(){
         JFrame n=new JFrame();
         n.setMinimumSize(new Dimension(750,500));
         PanelVentas p=new PanelVentas();
         n.add(p);
         n.setVisible(true);
+        n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
