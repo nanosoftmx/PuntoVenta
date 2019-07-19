@@ -40,10 +40,10 @@ public class PanelVentas extends JPanel{
     DefaultTableModel modelo = new DefaultTableModel();
     public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
     public static final String USERNAME = "postgres";
-    public static final String PASSWORD = "123456789";
+    public static final String PASSWORD = "1234";
 
-    PreparedStatement ps;
-    ResultSet rs;
+    PreparedStatement ps,ps1;
+    ResultSet rs,rs1;
 
     public PanelVentas(){
         setLayout(new GridBagLayout());
@@ -376,7 +376,7 @@ public class PanelVentas extends JPanel{
          c21.gridy = 13;     
          add(txtIVA,c21);
          
-         etiTotal=new JLabel("SUBTOTAL :");
+         etiTotal=new JLabel("TOTAL :");
          etiTotal.setFont(new Font("Century Gothic", 4, 12));
          etiTotal.setForeground(Color.WHITE);
          c22=new GridBagConstraints();
@@ -448,11 +448,15 @@ public class PanelVentas extends JPanel{
 
             try {
                 con = getConection();
-                ps = con.prepareStatement("SELECT * FROM producto WHERE codigo_producto = ?");
+                ps = con.prepareStatement("SELECT * FROM ingenieria.producto WHERE codigo_producto = ?");
+                ps1 = con.prepareStatement("SELECT precio FROM ingenieria.producto WHERE codigo_producto = ?");
                 // ps.setString(1, );
+                
                 ps.setInt(1, Integer.parseInt(txtClave.getText()));
+                ps1.setInt(1, Integer.parseInt(txtClave.getText()));
 
                 rs = ps.executeQuery();
+                rs1 = ps1.executeQuery();
 
                 if (rs.next()) {
                     //Object[][] data = {{rs.getString("codigo_producto"),rs.getString("descripcion"),rs.getString("marca"),rs.getString("fabricante"),rs.getString("precio")}};
@@ -467,6 +471,15 @@ public class PanelVentas extends JPanel{
                 } else {
                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                
+                if(rs1.next()){
+                    txtTotal.setText(rs.getString("precio"));
+                }
+                else{
+                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                
+                
             } catch (Exception f) {
                 System.err.println(f);
 
