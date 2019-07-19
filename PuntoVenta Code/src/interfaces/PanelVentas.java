@@ -448,7 +448,7 @@ public class PanelVentas extends JPanel{
 
             try {
                 con = getConection();
-                ps = con.prepareStatement("SELECT * FROM producto WHERE codigo_producto = ?");
+                ps = con.prepareStatement("SELECT * FROM ingenieria.producto WHERE codigo_producto = ?");
                 // ps.setString(1, );
                 ps.setInt(1, Integer.parseInt(txtClave.getText()));
 
