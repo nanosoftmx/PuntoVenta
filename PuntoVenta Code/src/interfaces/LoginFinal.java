@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author fernando
+ * @author NanoSoftware
  */
 public class LoginFinal extends JPanel{
     private JTextField user;
