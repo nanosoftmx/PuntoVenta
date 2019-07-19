@@ -1,0 +1,10 @@
+create table Vendedor (
+	id_empleado int, foreign key(id_empleado)references empleado(id_empleado) match 
+	full on update cascade on delete restrict,
+	comision decimal (9,2),
+	sueldo decimal (9,2)
+);
+
+
+alter table ingenieria.producto ADD nombre varchar (50);
+
