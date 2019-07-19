@@ -365,6 +365,7 @@ public class PanelVentas extends JPanel{
          txtIVA=new JTextField();
          txtIVA.setFont(new Font("Century Gothic", 4, 12));
          txtIVA.setEnabled(false);
+         txtIVA.setText("16%");
          c21=new GridBagConstraints();
          c21.fill = GridBagConstraints.HORIZONTAL;  
          c21.ipady = 0;      
@@ -445,6 +446,11 @@ public class PanelVentas extends JPanel{
     private void enter(ActionEvent e){
             //System.out.println("asd");
             Connection con = null;
+            int a=0;
+            int s=0;
+            String total="";
+            
+            
 
             try {
                 con = getConection();
@@ -474,12 +480,16 @@ public class PanelVentas extends JPanel{
                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 
-                if(rs1.next()){
-                    txtTotal.setText(rs.getString("precio"));
+                if (listRegistro.getRowCount()>0)
+            {
+                for (int i = 0; i<listRegistro.getRowCount();i++ ){
+                    a = Integer.parseInt(listRegistro.getValueAt(i, 4).toString());
+                    s+=a;
                 }
-                else{
-                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            }
+              
+             total = Integer.toString(s);
+             txtT.setText("$"+total);
                 
                 
             } catch (Exception f) {
@@ -498,5 +508,9 @@ public class PanelVentas extends JPanel{
         n.add(p);
         n.setVisible(true);
         n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    public static void main(String[] args) {
+        PanelVentas p = new PanelVentas();
     }
 }
