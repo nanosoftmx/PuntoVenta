@@ -40,10 +40,12 @@ public class PanelVentas extends JPanel{
     DefaultTableModel modelo = new DefaultTableModel();
     public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
     public static final String USERNAME = "postgres";
-    public static final String PASSWORD = "1234";
+    public static final String PASSWORD = "123456789";
 
     PreparedStatement ps,ps1;
     ResultSet rs,rs1;
+
+    int folioventa=1;
 
     public PanelVentas(){
         setLayout(new GridBagLayout());
@@ -243,7 +245,7 @@ public class PanelVentas extends JPanel{
          c13.gridy = 2;      
          add(etiExist,c13);
          
-         txtExist=new JTextField();
+         txtExist=new JTextField("NomVendedor");
          txtExist.setFont(new Font("Century Gothic", 4, 12));
          c15=new GridBagConstraints();
          c15.fill = GridBagConstraints.HORIZONTAL;  
@@ -265,6 +267,7 @@ public class PanelVentas extends JPanel{
         ;
         listRegistro=new JTable(modelo);
         modelo.addColumn("Codigo Producto");
+        modelo.addColumn("Nombre");
         modelo.addColumn("Descripcion");
         modelo.addColumn("Marca");
         modelo.addColumn("Fabricante");
@@ -325,6 +328,8 @@ public class PanelVentas extends JPanel{
          txtsubTotal=new JTextField();
          txtsubTotal.setFont(new Font("Century Gothic", 4, 12));
          txtsubTotal.setEnabled(false);
+         txtsubTotal.setForeground(Color.BLACK);
+         txtsubTotal.setDisabledTextColor(Color.BLACK);
          c19=new GridBagConstraints();
          c19.fill = GridBagConstraints.HORIZONTAL;  
          c19.ipady = 0;      
@@ -365,6 +370,8 @@ public class PanelVentas extends JPanel{
          txtIVA=new JTextField();
          txtIVA.setFont(new Font("Century Gothic", 4, 12));
          txtIVA.setEnabled(false);
+         txtIVA.setForeground(Color.BLACK);
+         txtIVA.setDisabledTextColor(Color.BLACK);
          c21=new GridBagConstraints();
          c21.fill = GridBagConstraints.HORIZONTAL;  
          c21.ipady = 0;      
@@ -392,6 +399,9 @@ public class PanelVentas extends JPanel{
          txtTotal=new JTextField();
          txtTotal.setFont(new Font("Century Gothic", 4, 12));
          txtTotal.setEnabled(false);
+         txtTotal.setEditable(false);
+         txtTotal.setForeground(Color.BLACK);
+         txtTotal.setDisabledTextColor(Color.BLACK);
          c23=new GridBagConstraints();
          c23.fill = GridBagConstraints.HORIZONTAL;  
          c23.ipady = 0;      
@@ -462,25 +472,33 @@ public class PanelVentas extends JPanel{
 
                 if (rs.next()) {
                     //Object[][] data = {{rs.getString("codigo_producto"),rs.getString("descripcion"),rs.getString("marca"),rs.getString("fabricante"),rs.getString("precio")}};
-                    Object[] fila = new Object[5];
+                    Object[] fila = new Object[6];
                     fila[0] = rs.getObject("codigo_producto");
-                    fila[1] = rs.getObject("descripcion");
-                    fila[2] = rs.getObject("marca");
-                    fila[3] = rs.getObject("fabricante");
-                    fila[4] = rs.getObject("precio");
+                    fila[2] = rs.getObject("descripcion");
+                    fila[3] = rs.getObject("marca");
+                    fila[4] = rs.getObject("fabricante");
+                    fila[5] = rs.getObject("precio");
                     modelo.addRow(fila);
+                    txtCant.setText(rs.getString("precio"));
+                    //txtTotal.setText("$  " + rs.getString("precio"));
 
+                    double total=0.0;
+                    int totalrow=listRegistro.getRowCount();
+                    totalrow-=1;
+                    for(int i = 0 ; i <= (totalrow) ; i++){
+                        double sumatoria = Double.parseDouble(String.valueOf(modelo.getValueAt(i,5)));
+                        total+=sumatoria;
+                    }
+                    txtsubTotal.setText("$  " + total);
+                    double iva = total * 0.16;
+                    double total2 = total + iva;
+                    txtIVA.setText("$  " + iva);
+                    txtTotal.setText("$  " + total2);
+                    txtFolio.setText("" + folioventa);
                 } else {
                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                
-                if(rs1.next()){
-                    txtTotal.setText(rs.getString("precio"));
-                }
-                else{
-                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                
+
                 
             } catch (Exception f) {
                 System.err.println(f);
