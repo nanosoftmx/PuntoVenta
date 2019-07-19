@@ -38,7 +38,7 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
 
     public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
     public static final String USERNAME = "postgres";
-    public static final String PASSWORD = "123456789";
+    public static final String PASSWORD = "1234";
 
     PreparedStatement ps;
     ResultSet rs;

@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Stephanie%20Martínez/Documents/NetBeansProjects/Electronica/src/interfaces/FondoPanel.java</file>
-            <file>file:/C:/Users/Stephanie%20Martínez/Documents/NetBeansProjects/Electronica/src/interfaces/Ventana_Principal.java</file>
-            <file>file:/C:/Users/Stephanie%20Martínez/Documents/NetBeansProjects/Electronica/src/interfaces/PanelConsulta.java</file>
-            <file>file:/C:/Users/Stephanie%20Martínez/Documents/NetBeansProjects/Electronica/src/interfaces/PanelLista.java</file>
-            <file>file:/C:/Users/Stephanie%20Martínez/Documents/NetBeansProjects/Electronica/src/interfaces/PanelVentas.java</file>
+            <file>file:/Users/fernando/Documents/GitHub/PuntoVenta/PuntoVenta%20Code/src/interfaces/Login.java</file>
+            <file>file:/Users/fernando/Documents/GitHub/PuntoVenta/PuntoVenta%20Code/src/interfaces/PanelVentas.java</file>
+            <file>file:/Users/fernando/Documents/GitHub/PuntoVenta/PuntoVenta%20Code/src/interfaces/Principal.java</file>
+            <file>file:/Users/fernando/Documents/GitHub/PuntoVenta/PuntoVenta%20Code/src/interfaces/LoginFinal.java</file>
         </group>
     </open-files>
 </project-private>

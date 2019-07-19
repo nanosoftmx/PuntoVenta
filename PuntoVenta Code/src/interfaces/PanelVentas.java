@@ -443,7 +443,7 @@ public class PanelVentas extends JPanel{
 
 
     private void enter(ActionEvent e){
-            System.out.println("asd");
+            //System.out.println("asd");
             Connection con = null;
 
             try {
