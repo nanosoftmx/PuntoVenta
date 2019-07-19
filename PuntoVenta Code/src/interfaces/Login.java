@@ -38,7 +38,7 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
 
     public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
     public static final String USERNAME = "postgres";
-    public static final String PASSWORD = "1234";
+    public static final String PASSWORD = "123456789";
 
     PreparedStatement ps;
     ResultSet rs;
@@ -172,7 +172,7 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
 
         try{
             con = getConection();
-             ps = con.prepareStatement("select * from ingenieria.empleado where usuario = ? and contraseña = ? ");
+             ps = con.prepareStatement("select usuario,contraseña from ingenieria.empleado where usuario = ? and contraseña = ? ");
              // ps.setString(1, );
              ps.setString(1, user.getText());
              ps.setString(2, contrasenna.getText());
