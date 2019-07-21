@@ -18,10 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -42,10 +39,11 @@ public class PanelVentas extends JPanel{
     public static final String USERNAME = "postgres";
     public static final String PASSWORD = "123456789";
 
-    PreparedStatement ps,ps1;
-    ResultSet rs,rs1;
+    PreparedStatement ps,psl;
+    ResultSet rs,rsl;
 
     int folioventa=1;
+    int foliofactura=2;
 
     public PanelVentas(){
         setLayout(new GridBagLayout());
@@ -64,12 +62,12 @@ public class PanelVentas extends JPanel{
          c.ipady = 1;       //make this component tall
          c.anchor = GridBagConstraints.NORTHWEST; //bottom of space
          c.insets = new Insets(4,20,4,4);  //top padding
-         c.gridheight = 1; 
-         c.gridwidth = 3;   
+         c.gridheight = 1;
+         c.gridwidth = 3;
          c.gridx=0;
          c.gridy = 0;       //third row
          add(titulo,c);
-         
+
          etiFolio=new JLabel("Folio");
          etiFolio.setFont(new Font("Century Gothic", 4, 12));
          etiFolio.setForeground(Color.WHITE);
@@ -83,7 +81,7 @@ public class PanelVentas extends JPanel{
          c1.gridwidth = 1;   //2 columns wide
          c1.gridy = 0;       //third row
          add(etiFolio,c1);
-         
+
          txtFolio=new JTextField();
          txtFolio.setFont(new Font("Century Gothic", 4, 12));
          c2=new GridBagConstraints();
@@ -96,7 +94,7 @@ public class PanelVentas extends JPanel{
          c2.gridwidth = 1;   //2 columns wide
          c2.gridy = 0;       //third row
          add(txtFolio,c2);
-         
+
          etiClave=new JLabel("Codigo");
          etiClave.setFont(new Font("Century Gothic", 4, 12));
          etiClave.setForeground(Color.WHITE);
@@ -110,7 +108,7 @@ public class PanelVentas extends JPanel{
          c3.gridwidth = 1;   //2 columns wide
          c3.gridy = 1;       //third row
          add(etiClave,c3);
-         
+
          txtClave=new JTextField();
          txtClave.setFont(new Font("Century Gothic", 4, 12));
          c4=new GridBagConstraints();
@@ -123,7 +121,7 @@ public class PanelVentas extends JPanel{
          c4.gridwidth = 1;   //2 columns wide
          c4.gridy = 1;       //third row
          add(txtClave,c4);
-         
+
          etiNombre=new JLabel("Nombre Producto");
          etiNombre.setFont(new Font("Century Gothic", 4, 12));
          etiNombre.setForeground(Color.WHITE);
@@ -137,7 +135,7 @@ public class PanelVentas extends JPanel{
          c5.gridwidth = 1;   //2 columns wide
          c5.gridy = 1;       //third row
          add(etiNombre,c5);
-         
+
          txtNombre=new JTextField();
          txtNombre.setFont(new Font("Century Gothic", 4, 12));
          c6=new GridBagConstraints();
@@ -150,7 +148,7 @@ public class PanelVentas extends JPanel{
          c6.gridwidth = 1;   //2 columns wide
          c6.gridy = 1;       //third row
          add(txtNombre,c6);
-         
+
          etiMarca=new JLabel("Descripción");
          etiMarca.setFont(new Font("Century Gothic", 4, 12));
          etiMarca.setForeground(Color.WHITE);
@@ -164,7 +162,7 @@ public class PanelVentas extends JPanel{
          c7.gridwidth = 1;   //2 columns wide
          c7.gridy = 1;       //third row
          add(etiMarca,c7);
-         
+
          txtMarca=new JTextField();
          txtMarca.setFont(new Font("Century Gothic", 4, 12));
          c8=new GridBagConstraints();
@@ -177,8 +175,8 @@ public class PanelVentas extends JPanel{
          c8.gridwidth = 1;   //2 columns wide
          c8.gridy = 1;       //third row
          add(txtMarca,c8);
-                          
-         etiAncho=new JLabel("Cantidad");
+
+         etiAncho=new JLabel("ID");
          etiAncho.setFont(new Font("Century Gothic", 4, 12));
          etiAncho.setForeground(Color.WHITE);
          c9=new GridBagConstraints();
@@ -191,7 +189,7 @@ public class PanelVentas extends JPanel{
          c9.gridwidth = 1;   //2 columns wide
          c9.gridy = 2;       //third row
          add(etiAncho,c9);
-         
+
          txtAncho=new JTextField();
          txtAncho.setFont(new Font("Century Gothic", 4, 12));
          c10=new GridBagConstraints();
@@ -204,7 +202,7 @@ public class PanelVentas extends JPanel{
          c10.gridwidth = 1;   //2 columns wide
          c10.gridy = 2;       //third row
          add(txtAncho,c10);
-         
+
          etiCant=new JLabel("Precio unitario");
          etiCant.setFont(new Font("Century Gothic", 4, 12));
          etiCant.setForeground(Color.WHITE);
@@ -218,7 +216,7 @@ public class PanelVentas extends JPanel{
          c11.gridwidth = 1;   //2 columns wide
          c11.gridy = 2;       //third row
          add(etiCant,c11);
-         
+
          txtCant=new JTextField();
          txtCant.setFont(new Font("Century Gothic", 4, 12));
          c12=new GridBagConstraints();
@@ -231,35 +229,35 @@ public class PanelVentas extends JPanel{
          c12.gridwidth = 1;   //2 columns wide
          c12.gridy = 2;       //third row
          add(txtCant,c12);
-         
+
          etiExist=new JLabel("Nombre vendedor");
          etiExist.setFont(new Font("Century Gothic", 4, 12));
          etiExist.setForeground(Color.WHITE);
          c13=new GridBagConstraints();
-         c13.fill = GridBagConstraints.HORIZONTAL; 
-         c13.ipady = 0;      
-         c13.anchor = GridBagConstraints.CENTER; 
-         c13.insets = new Insets(4,4,4,4);  
-         c13.gridx = 4;       
-         c13.gridwidth = 1;   
-         c13.gridy = 2;      
+         c13.fill = GridBagConstraints.HORIZONTAL;
+         c13.ipady = 0;
+         c13.anchor = GridBagConstraints.CENTER;
+         c13.insets = new Insets(4,4,4,4);
+         c13.gridx = 4;
+         c13.gridwidth = 1;
+         c13.gridy = 2;
          add(etiExist,c13);
-         
+
          txtExist=new JTextField("NomVendedor");
          txtExist.setFont(new Font("Century Gothic", 4, 12));
          c15=new GridBagConstraints();
-         c15.fill = GridBagConstraints.HORIZONTAL;  
-         c15.ipady = 0;      
-         c15.weightx = 1.0; 
-         c15.anchor = GridBagConstraints.CENTER; 
-         c15.insets = new Insets(4,4,4,20); 
-         c15.gridx = 5;       
-         c15.gridwidth = 1;  
-         c15.gridy = 2;     
+         c15.fill = GridBagConstraints.HORIZONTAL;
+         c15.ipady = 0;
+         c15.weightx = 1.0;
+         c15.anchor = GridBagConstraints.CENTER;
+         c15.insets = new Insets(4,4,4,20);
+         c15.gridx = 5;
+         c15.gridwidth = 1;
+         c15.gridy = 2;
          add(txtExist,c15);
-         
-        
-         
+
+
+
          //String[] columnNames = {"Código","Nombre producto","Descripción","Cantidad","Precio unitario","total"};
        //  Object[][] data = {};
 
@@ -289,7 +287,7 @@ public class PanelVentas extends JPanel{
          c16.gridwidth = 6;
          c16.gridy = 5;       //third row
          add(scrollPane,c16);
-         
+
          buscar=new JButton("Buscar");
          buscar.setFont(new Font("Century Gothic",4,12));
          add(buscar);
@@ -298,7 +296,7 @@ public class PanelVentas extends JPanel{
                  enter(evt);
              }
          });
-         
+
          regresar=new JButton("Menú Principal");
          regresar.setFont(new Font("Century Gothic", 4, 12));
          c17=new GridBagConstraints();
@@ -311,36 +309,36 @@ public class PanelVentas extends JPanel{
          c17.gridwidth = 1;   //2 columns wide
          c17.gridy = 12;       //third row
          add(regresar,c17);
-         
+
          etisubTotal=new JLabel("SUBTOTAL :");
          etisubTotal.setFont(new Font("Century Gothic", 4, 12));
          etisubTotal.setForeground(Color.WHITE);
          c18=new GridBagConstraints();
-         c18.fill = GridBagConstraints.WEST; 
-         c18.ipady = 0;      
-         c18.anchor = GridBagConstraints.CENTER; 
-         c18.insets = new Insets(4,4,4,4);  
-         c18.gridx = 4;       
-         c18.gridwidth = 1;   
-         c18.gridy = 12;      
+         c18.fill = GridBagConstraints.WEST;
+         c18.ipady = 0;
+         c18.anchor = GridBagConstraints.CENTER;
+         c18.insets = new Insets(4,4,4,4);
+         c18.gridx = 4;
+         c18.gridwidth = 1;
+         c18.gridy = 12;
          add(etisubTotal,c18);
-         
+
          txtsubTotal=new JTextField();
          txtsubTotal.setFont(new Font("Century Gothic", 4, 12));
          txtsubTotal.setEnabled(false);
          txtsubTotal.setForeground(Color.BLACK);
          txtsubTotal.setDisabledTextColor(Color.BLACK);
          c19=new GridBagConstraints();
-         c19.fill = GridBagConstraints.HORIZONTAL;  
-         c19.ipady = 0;      
-         c19.weightx = 1.0; 
-         c19.anchor = GridBagConstraints.CENTER; 
-         c19.insets = new Insets(4,4,4,20); 
-         c19.gridx = 5;       
-         c19.gridwidth = 1;  
-         c19.gridy = 12;     
+         c19.fill = GridBagConstraints.HORIZONTAL;
+         c19.ipady = 0;
+         c19.weightx = 1.0;
+         c19.anchor = GridBagConstraints.CENTER;
+         c19.insets = new Insets(4,4,4,20);
+         c19.gridx = 5;
+         c19.gridwidth = 1;
+         c19.gridy = 12;
          add(txtsubTotal,c19);
-         
+
          cancelar=new JButton("Cancelar");
          cancelar.setFont(new Font("Century Gothic", 4, 12));
          c25=new GridBagConstraints();
@@ -353,20 +351,20 @@ public class PanelVentas extends JPanel{
          c25.gridwidth = 1;   //2 columns wide
          c25.gridy = 13;       //third row
          add(cancelar,c25);
-         
+
          etIva=new JLabel("I.V.A. :");
          etIva.setFont(new Font("Century Gothic", 4, 12));
          etIva.setForeground(Color.WHITE);
          c20=new GridBagConstraints();
-         c20.fill = GridBagConstraints.WEST; 
-         c20.ipady = 0;      
-         c20.anchor = GridBagConstraints.CENTER; 
-         c20.insets = new Insets(4,4,4,4);  
-         c20.gridx = 4;       
-         c20.gridwidth = 1;   
-         c20.gridy = 13;      
+         c20.fill = GridBagConstraints.WEST;
+         c20.ipady = 0;
+         c20.anchor = GridBagConstraints.CENTER;
+         c20.insets = new Insets(4,4,4,4);
+         c20.gridx = 4;
+         c20.gridwidth = 1;
+         c20.gridy = 13;
          add(etIva,c20);
-         
+
          txtIVA=new JTextField();
          txtIVA.setFont(new Font("Century Gothic", 4, 12));
          txtIVA.setEnabled(false);
@@ -375,29 +373,29 @@ public class PanelVentas extends JPanel{
          txtIVA.setDisabledTextColor(Color.BLACK);
 
          c21=new GridBagConstraints();
-         c21.fill = GridBagConstraints.HORIZONTAL;  
-         c21.ipady = 0;      
-         c21.weightx = 1.0; 
-         c21.anchor = GridBagConstraints.CENTER; 
-         c21.insets = new Insets(4,4,4,20); 
-         c21.gridx = 5;       
-         c21.gridwidth = 1;  
-         c21.gridy = 13;     
+         c21.fill = GridBagConstraints.HORIZONTAL;
+         c21.ipady = 0;
+         c21.weightx = 1.0;
+         c21.anchor = GridBagConstraints.CENTER;
+         c21.insets = new Insets(4,4,4,20);
+         c21.gridx = 5;
+         c21.gridwidth = 1;
+         c21.gridy = 13;
          add(txtIVA,c21);
-         
+
          etiTotal=new JLabel("TOTAL :");
          etiTotal.setFont(new Font("Century Gothic", 4, 12));
          etiTotal.setForeground(Color.WHITE);
          c22=new GridBagConstraints();
-         c22.fill = GridBagConstraints.WEST; 
-         c22.ipady = 0;      
-         c22.anchor = GridBagConstraints.CENTER; 
-         c22.insets = new Insets(4,4,4,4);  
-         c22.gridx = 4;       
-         c22.gridwidth = 1;   
-         c22.gridy = 14;      
+         c22.fill = GridBagConstraints.WEST;
+         c22.ipady = 0;
+         c22.anchor = GridBagConstraints.CENTER;
+         c22.insets = new Insets(4,4,4,4);
+         c22.gridx = 4;
+         c22.gridwidth = 1;
+         c22.gridy = 14;
          add(etiTotal,c22);
-         
+
          txtTotal=new JTextField();
          txtTotal.setFont(new Font("Century Gothic", 4, 12));
          txtTotal.setEnabled(false);
@@ -405,16 +403,16 @@ public class PanelVentas extends JPanel{
          txtTotal.setForeground(Color.BLACK);
          txtTotal.setDisabledTextColor(Color.BLACK);
          c23=new GridBagConstraints();
-         c23.fill = GridBagConstraints.HORIZONTAL;  
-         c23.ipady = 0;      
-         c23.weightx = 1.0; 
-         c23.anchor = GridBagConstraints.CENTER; 
-         c23.insets = new Insets(4,4,4,20); 
-         c23.gridx = 5;       
-         c23.gridwidth = 1;  
-         c23.gridy = 14;     
+         c23.fill = GridBagConstraints.HORIZONTAL;
+         c23.ipady = 0;
+         c23.weightx = 1.0;
+         c23.anchor = GridBagConstraints.CENTER;
+         c23.insets = new Insets(4,4,4,20);
+         c23.gridx = 5;
+         c23.gridwidth = 1;
+         c23.gridy = 14;
          add(txtTotal,c23);
-         
+
          cobrar=new JButton("Cobrar");
          cobrar.setFont(new Font("Century Gothic", 4, 12));
          c24=new GridBagConstraints();
@@ -427,6 +425,11 @@ public class PanelVentas extends JPanel{
          c24.gridwidth = 1;   //2 columns wide
          c24.gridy = 14;       //third row
          add(cobrar,c24);
+         cobrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                cobrarevt(evt);
+            }
+        });
 
 
     }
@@ -452,32 +455,41 @@ public class PanelVentas extends JPanel{
         }
         return con;
     }
+    private void limpiarCajas() {
+
+        txtFolio.setText(null);
+        txtClave.setText(null);
+        txtNombre.setText(null);
+        txtsubTotal.setText(null);
+        txtIVA.setText(null);
+        txtTotal.setText(null);
+        txtCant.setText(null);
+    }
 
 
     private void enter(ActionEvent e){
             //System.out.println("asd");
             Connection con = null;
-            
-            
+
+
 
             try {
                 con = getConection();
                 ps = con.prepareStatement("SELECT * FROM ingenieria.producto WHERE codigo_producto = ?");
+                //psl = con.prepareStatement("SELECT nombre_e FROM ingenieria.vendedor WHERE nombre_e = ?");
 
-                ps1 = con.prepareStatement("SELECT precio FROM ingenieria.producto WHERE codigo_producto = ?");
-
-                // ps.setString(1, );
-                
                 ps.setInt(1, Integer.parseInt(txtClave.getText()));
-                ps1.setInt(1, Integer.parseInt(txtClave.getText()));
+
+                //ps1.setInt(1, Integer.parseInt(txtClave.getText()));
 
                 rs = ps.executeQuery();
-                rs1 = ps1.executeQuery();
+                //rsl = psl.executeQuery();
 
                 if (rs.next()) {
                     //Object[][] data = {{rs.getString("codigo_producto"),rs.getString("descripcion"),rs.getString("marca"),rs.getString("fabricante"),rs.getString("precio")}};
                     Object[] fila = new Object[6];
                     fila[0] = rs.getObject("codigo_producto");
+                    fila[1] = rs.getObject("nombre");
                     fila[2] = rs.getObject("descripcion");
                     fila[3] = rs.getObject("marca");
                     fila[4] = rs.getObject("fabricante");
@@ -485,6 +497,8 @@ public class PanelVentas extends JPanel{
                     modelo.addRow(fila);
                     txtCant.setText(rs.getString("precio"));
                     txtTotal.setText("$  " + rs.getString("precio"));
+                    txtNombre.setText(rs.getString("nombre"));
+
 
                     double total=0.0;
                     int totalrow=listRegistro.getRowCount();
@@ -502,12 +516,63 @@ public class PanelVentas extends JPanel{
                 } else {
                     JOptionPane.showMessageDialog(cobrar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                
+
             } catch (Exception f) {
                 System.err.println(f);
 
             }
+
+
         }
+
+        public void cobrarevt(ActionEvent e){
+            Connection con = null;
+
+            try {
+
+
+                con = getConection();
+                PreparedStatement ps3 = con.prepareStatement("insert into ingenieria.factura values(?,?)");
+                ps3.setDate(1,getCurrentDate());
+                ps3.setInt(2,foliofactura);
+                int res3 = ps3.executeUpdate();
+
+                ps = con.prepareStatement("INSERT INTO ingenieria.venta (folio_venta, id_empleado, fecha, folio_f) VALUES(?,?,?,?);");
+
+                ps.setInt(1, Integer.parseInt(txtFolio.getText()));
+                ps.setInt(2, Integer.parseInt(txtAncho.getText()));
+                ps.setDate(3, getCurrentDate());
+                ps.setInt(4, (foliofactura));
+                int res = ps.executeUpdate();
+
+
+
+
+
+
+
+                if (res > 0) {
+                    JOptionPane.showMessageDialog(null, "Se realizo la venta");
+                    limpiarCajas();
+                    folioventa++;
+                    foliofactura++;
+                } else {
+                    JOptionPane.showMessageDialog(null, "error al realizar venta");
+                    limpiarCajas();
+                }
+
+                con.close();
+
+            } catch (Exception ex) {
+                System.err.println(ex);
+            }
+
+        }
+
+    private static java.sql.Date getCurrentDate() {
+        java.util.Date today = new java.util.Date();
+        return new java.sql.Date(today.getTime());
+    }
 
 
 
