@@ -42,8 +42,10 @@ public class PanelVentas extends JPanel{
     PreparedStatement ps,psl;
     ResultSet rs,rsl;
 
+    double total2;
+
     int folioventa=1;
-    int foliofactura=2;
+    int foliofactura=1;
 
     public PanelVentas(){
         setLayout(new GridBagLayout());
@@ -509,7 +511,7 @@ public class PanelVentas extends JPanel{
                     }
                     txtsubTotal.setText("$  " + total);
                     double iva = total * 0.16;
-                    double total2 = total + iva;
+                    total2 = total + iva;
                     txtIVA.setText("$  " + iva);
                     txtTotal.setText("$  " + total2);
                     txtFolio.setText("" + folioventa);
@@ -537,18 +539,29 @@ public class PanelVentas extends JPanel{
                 ps3.setInt(2,foliofactura);
                 int res3 = ps3.executeUpdate();
 
+
                 ps = con.prepareStatement("INSERT INTO ingenieria.venta (folio_venta, id_empleado, fecha, folio_f) VALUES(?,?,?,?);");
 
-                ps.setInt(1, Integer.parseInt(txtFolio.getText()));
+                ps.setInt(1, folioventa);
                 ps.setInt(2, Integer.parseInt(txtAncho.getText()));
                 ps.setDate(3, getCurrentDate());
                 ps.setInt(4, (foliofactura));
                 int res = ps.executeUpdate();
 
+                con = getConection();
+                PreparedStatement ps4 = con.prepareStatement("insert into ingenieria.detalle_venta(folio_venta, cantidad, descuento, codigo_producto) values(?,?,?,?)");
+                ps4.setInt(1,folioventa);
+                ps4.setDouble(2,total2);
+                ps4.setInt(3,0);
+                ps4.setInt(4,Integer.parseInt(txtClave.getText()));
+                int res4 = ps4.executeUpdate();
 
-
-
-
+                con = getConection();
+                PreparedStatement ps5 = con.prepareStatement("insert into ingenieria.ticket values(?,?,?)");
+                ps5.setInt(1,Integer.parseInt(txtAncho.getText()));
+                ps5.setDate(2,getCurrentDate());
+                ps5.setInt(3,folioventa);
+                int res5 = ps5.executeUpdate();
 
 
                 if (res > 0) {
