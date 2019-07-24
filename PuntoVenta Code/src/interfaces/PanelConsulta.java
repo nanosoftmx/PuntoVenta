@@ -14,15 +14,14 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,6 +33,17 @@ public class PanelConsulta extends JPanel {
     private JButton btnBuscar,btnCompras,btnRegistroUso,btnprint,btnAgregar,btnEliminar;
     private JTable tablaRegistros;
     private GridBagConstraints c,c1,c2,c3,c4,c5,c6,c7,c8,c9;
+
+    DefaultTableModel modelo = new DefaultTableModel();
+    Object[] fila = new Object[6];
+
+
+    public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
+    public static final String USERNAME = "postgres";
+    public static final String PASSWORD = "123456789";
+
+    PreparedStatement ps,psl;
+    ResultSet rs,rsl;
     
     public PanelConsulta(){
       setLayout(new GridBagLayout());
@@ -55,7 +65,7 @@ public class PanelConsulta extends JPanel {
          c.gridy = 0;       //third row
          add(titulo,c);
         
-     txtBuscar=new JTextField();
+         txtBuscar=new JTextField();
          txtBuscar.setFont(new Font("Century Gothic", 1, 12));
          c2=new GridBagConstraints();
          c2.fill = GridBagConstraints.HORIZONTAL;  //natural height, maximum width
@@ -68,7 +78,7 @@ public class PanelConsulta extends JPanel {
          c2.gridy = 1;       //third row
          add(txtBuscar,c2);
      
-     btnBuscar=new JButton("Buscar");
+         btnBuscar=new JButton("Buscar");
          btnBuscar.setFont(new Font("Century Gothic", 2, 12));
          c3=new GridBagConstraints();
          c3.fill = GridBagConstraints.HORIZONTAL;  //natural height, maximum width
@@ -79,12 +89,23 @@ public class PanelConsulta extends JPanel {
          c3.gridwidth = 1;   //2 columns wide
          c3.gridy = 1;       //third row
          add(btnBuscar,c3);
-     
-     
-        String[] columnNames = {"Código","Nombre producto","Descripción","Cantidad en existencia","Precio unitario"};
-        Object[][] data = {{"0012555","Teclado ASUS","teclado para gamers","10","$340.00"}};
+         btnBuscar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+                limpiarCajas();
+            }
+         });
 
-     tablaRegistros=new JTable(data,columnNames);
+     
+
+
+        tablaRegistros=new JTable(modelo);
+        modelo.addColumn("Codigo Producto");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Descripcion");
+        modelo.addColumn("Marca");
+        modelo.addColumn("Fabricante");
+        modelo.addColumn("Precio");
         tablaRegistros.setFont(new Font("Century Gothic", 2, 12));
         tablaRegistros.setPreferredScrollableViewportSize(new Dimension(500, 200));
         tablaRegistros.setFillsViewportHeight(true);
@@ -104,7 +125,7 @@ public class PanelConsulta extends JPanel {
          c5.gridy = 2;       //third row
          add(scrollPane,c5);
      
-     btnRegistroUso=new JButton("Menú Principal");
+         btnRegistroUso=new JButton("Menú Principal");
          btnRegistroUso.setFont(new Font("Century Gothic", 2, 12));
          c6=new GridBagConstraints();
          c6.fill = GridBagConstraints.NONE;  //natural height, maximum width
@@ -153,9 +174,16 @@ public class PanelConsulta extends JPanel {
          c9.gridwidth = 1;   //2 columns wide
          c9.gridy = 3;       //third row
          add(btnEliminar,c9);
-         
-         
-     
+         btnEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnEliminarevt(evt);
+                limpiarCajas();
+            }
+        });
+
+
+
+
     }
       public void paintComponent(Graphics g){
         Dimension tamanno=getSize();
@@ -164,13 +192,87 @@ public class PanelConsulta extends JPanel {
         setOpaque(false);
         super.paintComponents(g);
     }
+
+    private void limpiarCajas() {
+
+        txtBuscar.setText(null);
+    }
+
+    public static Connection getConection() {
+        Connection con = null;
+
+        try {
+
+            Class.forName("org.postgresql.Driver");
+            con = (Connection) DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            //JOptionPane.showMessageDialog(null, "Conexion exitosa");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return con;
+    }
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {
+
+        Connection con = null;
+
+        try {
+
+            con = getConection();
+            ps = con.prepareStatement("SELECT * FROM ingenieria.producto WHERE nombre like ?");
+            ps.setString(1,  "%"+ txtBuscar.getText() + "%");
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                fila[0] = rs.getObject("codigo_producto");
+                fila[1] = rs.getObject("nombre");
+                fila[2] = rs.getObject("descripcion");
+                fila[3] = rs.getObject("marca");
+                fila[4] = rs.getObject("fabricante");
+                fila[5] = rs.getObject("precio");
+                modelo.addRow(fila);
+
+            } //else {
+                //JOptionPane.showMessageDialog(null, "No existe un producto con ese nombre");
+            //}
+
+        } catch (Exception e) {
+            System.err.println(e);
+            JOptionPane.showMessageDialog(null, "No existe un producto con ese nombre");
+        }
+
+    }
+
+    public void btnEliminarevt(java.awt.event.ActionEvent evt){
+        int fila = tablaRegistros.getSelectedRow();
+        int id = (int) tablaRegistros.getValueAt(fila,0);
+        System.out.println(id);
+
+        Connection con = null;
+
+        try {
+
+            con = getConection();
+            ps = con.prepareStatement("DELETE FROM ingenieria.producto WHERE codigo_producto = ?");
+            ps.setInt(1, id);
+            int res = ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Se elimino el producto");
+        } catch (Exception ex) {
+            System.err.println(ex);
+        }
+
+
+        }
     
-    public static void main(String[]args){
+    public void ejecutar(){
         JFrame n=new JFrame();
         n.setMinimumSize(new Dimension(750,500));
         PanelConsulta p=new PanelConsulta();
         n.add(p);
         n.setVisible(true);
+        n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
 }
