@@ -12,6 +12,8 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -96,8 +98,15 @@ public class Menu_princ extends JPanel {
          c2.gridwidth = 1;   //2 columns wide
          c2.gridy = 4;       //third row
          add(vendedor,c2);
-         
-         gerente=new JButton("GERENCIA");
+         vendedor.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                PanelVentas p = new PanelVentas();
+                p.ejecutar();
+            }
+        });
+
+
+        gerente=new JButton("GERENCIA");
          gerente.setFont(new Font("Century Gothic", 3, 20));
          gerente.setForeground(Color.WHITE);
          String pat="/imagenes/gerente.png";
@@ -122,12 +131,13 @@ public class Menu_princ extends JPanel {
          c3.gridy = 4;       //third row
          add(gerente,c3);
     }
-    public static void main(String[]args){
+    public void ejecutar(){
         JFrame n=new JFrame();
         n.setMinimumSize(new Dimension(750,500));
         Menu_princ p=new Menu_princ();
         n.add(p);
         n.setVisible(true);
+        n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     
