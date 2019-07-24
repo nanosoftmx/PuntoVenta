@@ -183,7 +183,8 @@ public class Login extends JFrame /*implements ActionListener,MouseListener*/{
             user.setText(rs.getString("usuario"));
             contrasenna.setText(rs.getString("contraseña"));
             PanelVentas p = new PanelVentas();
-            p.ejecutar();
+            Menu_princ m = new Menu_princ();
+            m.ejecutar();
             dispose();
         } else {
             JOptionPane.showMessageDialog(aceptar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
