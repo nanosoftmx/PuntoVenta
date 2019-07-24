@@ -259,12 +259,6 @@ public class PanelVentas extends JPanel{
          add(txtExist,c15);
 
 
-
-         //String[] columnNames = {"Código","Nombre producto","Descripción","Cantidad","Precio unitario","total"};
-       //  Object[][] data = {};
-
-
-        ;
         listRegistro=new JTable(modelo);
         modelo.addColumn("Codigo Producto");
         modelo.addColumn("Nombre");
@@ -470,7 +464,6 @@ public class PanelVentas extends JPanel{
 
 
     private void enter(ActionEvent e){
-            //System.out.println("asd");
             Connection con = null;
 
 
@@ -486,6 +479,15 @@ public class PanelVentas extends JPanel{
 
                 rs = ps.executeQuery();
                 //rsl = psl.executeQuery();
+
+                con = getConection();
+                PreparedStatement ps2 = con.prepareStatement("SELECT nombre_e FROM ingenieria.vendedor where id_empleado=?");
+                ps2.setInt(1,Integer.parseInt(txtAncho.getText()));
+                ResultSet res2 = ps2.executeQuery();
+                if(res2.next()){
+                    txtExist.setText(res2.getString("nombre_e"));
+                }
+
 
                 if (rs.next()) {
                     //Object[][] data = {{rs.getString("codigo_producto"),rs.getString("descripcion"),rs.getString("marca"),rs.getString("fabricante"),rs.getString("precio")}};
@@ -587,29 +589,12 @@ public class PanelVentas extends JPanel{
         return new java.sql.Date(today.getTime());
     }
 
-
-
-
-    public void ejecutar(){
+    public void ejecutar() {
         JFrame n=new JFrame();
         n.setMinimumSize(new Dimension(750,500));
         PanelVentas p=new PanelVentas();
         n.add(p);
         n.setVisible(true);
         n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-    
-    public static void main(String[] args) {
-        PanelVentas p = new PanelVentas();
-        //    if (listRegistro.getRowCount()>0)
-            //{
-             //   for (int i = 0; i<listRegistro.getRowCount();i++ ){
-              //      a = Integer.parseInt(listRegistro.getValueAt(i, 4).toString());
-              //      s+=a;
-              //  }
-           // }
-              
-          //   total = Integer.toString(s);
-           //  txtT.setText("$"+total);
     }
 }
