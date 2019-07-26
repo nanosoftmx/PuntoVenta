@@ -23,22 +23,15 @@ import java.awt.GridBagLayout;
 
 import java.awt.Insets;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import javax.swing.ImageIcon;
-
-import javax.swing.JButton;
-
-import javax.swing.JFrame;
-
-import javax.swing.JLabel;
-
-import javax.swing.JPanel;
-
-import javax.swing.JPasswordField;
-
-import javax.swing.JTextField;
-
+import javax.swing.*;
 
 
 /**
@@ -67,7 +60,13 @@ public class LoginFinal extends JPanel{
 
     private GridBagConstraints c,c1,c2,c3,c4,c5,c6,c7,c8,c9;
 
-    
+    public static final String URL = "jdbc:postgresql://localhost:5432/PuntoVentaIng";
+    public static final String USERNAME = "postgres";
+    public static final String PASSWORD = "123456789";
+
+    PreparedStatement ps;
+    ResultSet rs;
+
 
     public LoginFinal(){
 
@@ -273,6 +272,11 @@ public class LoginFinal extends JPanel{
 
          add(aceptar,c6);
 
+        aceptar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnIngresarActionPerformed(evt);
+            }
+        });
          
 
          salir=new JButton("Salir");
@@ -297,6 +301,8 @@ public class LoginFinal extends JPanel{
 
          c7.gridy = 6;       //third row
 
+         salir.setForeground(Color.RED);
+
          add(salir,c7);
 
     }
@@ -315,7 +321,53 @@ public class LoginFinal extends JPanel{
 
     }
 
-    public static void main(String[]args){
+
+    public static Connection getConection() {
+        Connection con = null;
+
+        try {
+
+            Class.forName("org.postgresql.Driver");
+            con = (Connection) DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            //JOptionPane.showMessageDialog(null, "Conexion exitosa");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return con;
+
+    }
+
+    private void btnIngresarActionPerformed(ActionEvent evt){
+
+        Connection con = null;
+
+        try{
+            con = getConection();
+            ps = con.prepareStatement("select usuario,contraseña from ingenieria.empleado where usuario = ? and contraseña = ? ");
+            // ps.setString(1, );
+            ps.setString(1, user.getText());
+            ps.setString(2, contrasenna.getText());
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                user.setText(rs.getString("usuario"));
+                contrasenna.setText(rs.getString("contraseña"));
+                Menu_princ m = new Menu_princ();
+                m.ejecutar();
+
+            } else {
+                JOptionPane.showMessageDialog(aceptar, "Datos ingresados incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+
+        }
+
+    }
+
+    public void ejecutar(){
 
         JFrame n=new JFrame();
 
@@ -329,6 +381,7 @@ public class LoginFinal extends JPanel{
 
     }
 
-    
+
+
 
 }

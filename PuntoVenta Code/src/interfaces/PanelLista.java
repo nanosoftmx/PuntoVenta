@@ -128,6 +128,7 @@ public class PanelLista extends JPanel{
          c6.gridx = 4;       //aligned with button 2
          c6.gridwidth = 1;   //2 columns wide
          c6.gridy = 3;       //third row
+         eliminar.setForeground(Color.RED);
          add(eliminar,c6);
     }
      public void paintComponent(Graphics g){

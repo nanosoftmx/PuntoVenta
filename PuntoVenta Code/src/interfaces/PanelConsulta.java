@@ -274,5 +274,10 @@ public class PanelConsulta extends JPanel {
         n.setVisible(true);
         n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
+    public static void main(String [] args){
+        PanelConsulta v = new PanelConsulta();
+        v.ejecutar();
+    }
     
 }

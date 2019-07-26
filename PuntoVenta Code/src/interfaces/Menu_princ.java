@@ -102,6 +102,7 @@ public class Menu_princ extends JPanel {
             public void actionPerformed(ActionEvent evt) {
                 PanelVentas p = new PanelVentas();
                 p.ejecutar();
+
             }
         });
 
@@ -130,6 +131,7 @@ public class Menu_princ extends JPanel {
          c3.gridwidth = 1;   //2 columns wide
          c3.gridy = 4;       //third row
          add(gerente,c3);
+
     }
     public void ejecutar(){
         JFrame n=new JFrame();

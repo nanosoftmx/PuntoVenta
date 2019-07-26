@@ -46,6 +46,7 @@ public class PanelVentas extends JPanel{
 
     int folioventa=1;
     int foliofactura=1;
+    Object[] fila = new Object[6];
 
     public PanelVentas(){
         setLayout(new GridBagLayout());
@@ -284,7 +285,7 @@ public class PanelVentas extends JPanel{
          c16.gridy = 5;       //third row
          add(scrollPane,c16);
 
-         buscar=new JButton("Buscar");
+         buscar=new JButton("Agregar");
          buscar.setFont(new Font("Century Gothic",4,12));
          add(buscar);
          buscar.addActionListener(new ActionListener() {
@@ -305,6 +306,12 @@ public class PanelVentas extends JPanel{
          c17.gridwidth = 1;   //2 columns wide
          c17.gridy = 12;       //third row
          add(regresar,c17);
+         regresar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                Menu_princ m = new Menu_princ();
+                m.ejecutar();
+            }
+        });
 
          etisubTotal=new JLabel("SUBTOTAL :");
          etisubTotal.setFont(new Font("Century Gothic", 4, 12));
@@ -346,7 +353,14 @@ public class PanelVentas extends JPanel{
          c25.gridx = 3;       //aligned with button 2
          c25.gridwidth = 1;   //2 columns wide
          c25.gridy = 13;       //third row
+         cancelar.setForeground(Color.RED);
          add(cancelar,c25);
+         cancelar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnCancelar(evt);
+            }
+        });
+
 
          etIva=new JLabel("I.V.A. :");
          etIva.setFont(new Font("Century Gothic", 4, 12));
@@ -460,6 +474,7 @@ public class PanelVentas extends JPanel{
         txtIVA.setText(null);
         txtTotal.setText(null);
         txtCant.setText(null);
+        txtAncho.setText(null);
     }
 
 
@@ -491,7 +506,7 @@ public class PanelVentas extends JPanel{
 
                 if (rs.next()) {
                     //Object[][] data = {{rs.getString("codigo_producto"),rs.getString("descripcion"),rs.getString("marca"),rs.getString("fabricante"),rs.getString("precio")}};
-                    Object[] fila = new Object[6];
+
                     fila[0] = rs.getObject("codigo_producto");
                     fila[1] = rs.getObject("nombre");
                     fila[2] = rs.getObject("descripcion");
@@ -530,6 +545,7 @@ public class PanelVentas extends JPanel{
         }
 
         public void cobrarevt(ActionEvent e){
+
             Connection con = null;
 
             try {
@@ -583,6 +599,11 @@ public class PanelVentas extends JPanel{
             }
 
         }
+
+    public void btnCancelar(ActionEvent e){
+        limpiarCajas();
+        modelo.setRowCount(0);
+    }
 
     private static java.sql.Date getCurrentDate() {
         java.util.Date today = new java.util.Date();
